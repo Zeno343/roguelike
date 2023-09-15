@@ -8,9 +8,7 @@ use {
             LeaveAlternateScreen,
         },
     },
-    std::{
-        io::{stdout, Write, Stdout},
-    },
+    std::io::{stdout, Stdout, Write},
 };
 
 pub struct Screen {
@@ -40,7 +38,7 @@ impl Screen {
         execute!(self.stdout, Clear(ClearType::All))?;
 
         queue!(self.stdout, MoveTo(x, y), PrintStyledContent("@".white()),)?;
-        
+
         self.stdout.flush()
     }
 }

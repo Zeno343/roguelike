@@ -1,10 +1,9 @@
+mod event;
 mod screen;
+
 use {
-    std::time::Duration,
+    event::{Event, Events, KeyCode},
     screen::Screen,
-    crossterm::{
-    event::{poll, read, Event, KeyCode},
-    }
 };
 
 fn main() -> std::io::Result<()> {
@@ -13,9 +12,8 @@ fn main() -> std::io::Result<()> {
     'main: loop {
         screen.draw()?;
 
-        if poll(Duration::from_millis(1))? {
-            let event = read()?;
-
+        let events = Events;
+        for event in events {
             if event == Event::Key(KeyCode::Esc.into()) {
                 break 'main;
             }
