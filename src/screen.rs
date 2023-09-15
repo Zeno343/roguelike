@@ -1,8 +1,9 @@
 use {
+    super::entity::Entity,
     crossterm::{
         cursor::{Hide, MoveTo, Show},
         execute, queue,
-        style::{PrintStyledContent, Stylize},
+        style::{PrintStyledContent, StyledContent},
         terminal::{
             disable_raw_mode, enable_raw_mode, size, Clear, ClearType, EnterAlternateScreen,
             LeaveAlternateScreen,
@@ -32,14 +33,26 @@ impl Screen {
         })
     }
 
-    pub fn draw(&mut self) -> std::io::Result<()> {
-        let [x, y] = [self.width / 2, self.height / 2];
-
+    pub fn draw(&mut self, entities: &[Entity]) -> std::io::Result<()> {
         execute!(self.stdout, Clear(ClearType::All))?;
 
-        queue!(self.stdout, MoveTo(x, y), PrintStyledContent("@".white()),)?;
+        for entity in entities {
+            entity.draw(self)?;
+        }
 
         self.stdout.flush()
+    }
+
+    pub fn put_char(
+        &mut self,
+        [x, y]: [u16; 2],
+        symbol: StyledContent<char>,
+    ) -> std::io::Result<()> {
+        queue!(self.stdout, MoveTo(x, y), PrintStyledContent(symbol))
+    }
+
+    pub fn size(&self) -> [u16; 2] {
+        [self.width, self.height]
     }
 }
 

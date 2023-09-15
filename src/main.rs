@@ -1,7 +1,9 @@
+mod entity;
 mod event;
 mod screen;
 
 use {
+    entity::Entity,
     event::{Event, Events, KeyCode},
     screen::Screen,
 };
@@ -9,8 +11,12 @@ use {
 fn main() {
     let mut screen = Screen::new().expect("terminal setup failed");
 
+    let [width, height] = screen.size();
+    let player = Entity::new([width / 2, height / 2], '@');
+    let entities = &[player];
+
     'main: loop {
-        screen.draw().expect("drawing to terminal failed");
+        screen.draw(entities).expect("drawing to terminal failed");
 
         let events = Events;
         for event in events {
