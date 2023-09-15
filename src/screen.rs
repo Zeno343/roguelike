@@ -33,13 +33,11 @@ impl Screen {
         })
     }
 
-    pub fn draw(&mut self, entities: &[Entity]) -> std::io::Result<()> {
-        execute!(self.stdout, Clear(ClearType::All))?;
+    pub fn clear(&mut self) -> std::io::Result<()> {
+        execute!(self.stdout, Clear(ClearType::All))
+    }
 
-        for entity in entities {
-            entity.draw(self)?;
-        }
-
+    pub fn present(&mut self) -> std::io::Result<()> {
         self.stdout.flush()
     }
 
