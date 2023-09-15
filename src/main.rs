@@ -6,11 +6,11 @@ use {
     screen::Screen,
 };
 
-fn main() -> std::io::Result<()> {
-    let mut screen = Screen::new()?;
+fn main() {
+    let mut screen = Screen::new().expect("terminal setup failed");
 
     'main: loop {
-        screen.draw()?;
+        screen.draw().expect("drawing to terminal failed");
 
         let events = Events;
         for event in events {
@@ -19,6 +19,4 @@ fn main() -> std::io::Result<()> {
             }
         }
     }
-
-    Ok(())
 }
