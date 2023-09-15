@@ -4,10 +4,11 @@ mod map;
 mod screen;
 
 use {
+    crossterm::event::{read, Event, KeyCode},
     entity::Entity,
-    event::{Event, Events, KeyCode},
+    map::Map,
     screen::Screen,
-    map::Map
+    std::time::Duration,
 };
 
 fn main() {
@@ -21,22 +22,27 @@ fn main() {
     let player = Entity::new(center, '@');
     let entities = &[player];
 
+    draw(&mut screen, entities, &map);
+
     'main: loop {
-        screen.clear().expect("screen clear failed");
+        let event = read().expect("event read failed");
 
-        map.draw(&mut screen).expect("map draw failed");
-
-        for entity in entities {
-            entity.draw(&mut screen).expect("entity draw failed");
+        if event == Event::Key(KeyCode::Esc.into()) {
+            break 'main;
         }
 
-        screen.present().expect("screen present failed");
-
-        let events = Events;
-        for event in events {
-            if event == Event::Key(KeyCode::Esc.into()) {
-                break 'main;
-            }
-        }
+        draw(&mut screen, entities, &map);
     }
+}
+
+fn draw(screen: &mut Screen, entities: &[Entity], map: &Map) {
+    screen.clear().expect("screen clear failed");
+
+    map.draw(screen).expect("map draw failed");
+
+    for entity in entities {
+        entity.draw(screen).expect("entity draw failed");
+    }
+
+    screen.present().expect("screen present failed");
 }

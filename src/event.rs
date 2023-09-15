@@ -10,7 +10,7 @@ impl Iterator for Events {
     type Item = Event;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if poll(Duration::from_millis(1)).expect("event poll failed") {
+        if poll(Duration::from_millis(30)).expect("event poll failed") {
             Some(read().expect("event read failed"))
         } else {
             None
